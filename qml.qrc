@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MapMarker.qml</file>
+        <file>marker.png</file>
+        <file>citylist.json</file>
+        <file>MapMarkerObject.qml</file>
+        <file>dataloader.js</file>
+        <file>AppBar.qml</file>
+    </qresource>
+</RCC>
