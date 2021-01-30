@@ -2,7 +2,7 @@
 
 Weather::Weather(QObject *parent) : QObject(parent)
 {
-    apiKey = "38fc95d3e8022eed2ac829478c1d6b18";
+    apiKey = "key here";
     cityList = new QFile(":/citylist.json");
 
     if (!cityList->open(QIODevice::ReadOnly)) {

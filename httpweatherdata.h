@@ -24,7 +24,7 @@ public slots:
     void onReceived(QNetworkReply *reply);
 
 private:
-    QString apiKey = "38fc95d3e8022eed2ac829478c1d6b18";
+    QString apiKey = "key here";
 };
 
 #endif // HTTPWEATHERDATA_H
