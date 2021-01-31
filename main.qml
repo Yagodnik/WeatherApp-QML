@@ -34,6 +34,11 @@ Window {
         currentIndex: 0
         interactive: false
 
+        onCurrentIndexChanged: {
+            savedCityList.reloadSavedCities();
+            map.initCities();
+        }
+
 
         Item {
             HttpWeatherData {
@@ -86,12 +91,15 @@ Window {
                         var cityId = cityIdList[i];
 
                         console.log("City = " + cityName);
+                        var data = httpWeatherData.getDataFromCity(cityId);
+                        if (data === "-1")
+                            continue;
 
                         var component = Qt.createComponent("MapMarkerObject.qml");
                         var item = component.createObject(map, {
                             pos: QtPositioning.coordinate(lat, lon),
                             city: cityName,
-                            weatherData: httpWeatherData.getDataFromCity(cityId)
+                            weatherData: data
                         });
 
                         map.addMapItem(item);
@@ -201,14 +209,14 @@ Window {
             ListView {
                 id: savedCityList
                 anchors.top: appbar3.bottom
-
+                height: 200
                 delegate: Rectangle {
                     id: savedItemRoot
                     width: window.width
                     height: 40
 
                     Text {
-                        text: name
+                        text: model.modelData.name
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
                         anchors.left: savedItemRoot.left
@@ -228,28 +236,22 @@ Window {
                         anchors.fill: parent
 
                         onClicked: function() {
+                            //Remove
+                            var cityNames = myData.getData(1).split(" ");
+                            for (var i = 0;i < cityNames.length;i++) {
+                                if (model.modelData.name === cityNames[i]) {
+                                    console.log(savedCityList.model[i].name);
+                                    myData.remove(i);
+                                    view.currentIndex = 0;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
 
-                Component.onCompleted: function() {
-                    var cityNames = myData.getData(1).split(" ");
-
-                    console.log("Names = " + cityNames.toString())
-                    var model1 = Qt.createQmlObject('import QtQuick 2.4; ListModel {}', parent);
-
-                    //append({ name: "111" });
-                    for (var j = 0;j < cityNames.length;j++) {
-                        var cityName = cityNames[j];
-
-                        model1.append({
-                            name: cityName
-                        });
-                    }
-
-                    model = model1;
-
-                    //WorkerScript.sync();
+                function reloadSavedCities() {
+                    model = myData.getCities()
                 }
             }
         }
