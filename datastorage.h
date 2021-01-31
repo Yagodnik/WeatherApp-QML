@@ -8,6 +8,30 @@
 #include <QByteArray>
 #include <QStandardPaths>
 
+
+class CityObject : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+
+public:
+    CityObject(QObject *parent = nullptr, QString cName = "") : QObject(parent)
+    {
+        cityName = cName;
+    }
+
+    Q_INVOKABLE QString name() {
+        return cityName;
+    }
+
+    QString cityName;
+signals:
+    void nameChanged();
+
+};
+
+
+
 class DataStorage : public QObject
 {
     Q_OBJECT
@@ -26,6 +50,10 @@ public:
     Q_INVOKABLE void addNewLine(QString data);
     Q_INVOKABLE QString findCityByName(QString name);
     Q_INVOKABLE QString getData(int dataType);
+    Q_INVOKABLE void remove(int index);
+
+    Q_INVOKABLE QList<QObject*> getCities();
+
 };
 
 #endif // DATASTORAGE_H
