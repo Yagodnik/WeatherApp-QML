@@ -52,6 +52,7 @@ QString HttpWeatherData::getDataFromCity(QString id)
             // handle error
             QString error = reply->errorString();
             qDebug()<< "reply->errorString() " << error;
+            return "-1";
         }
     }
     else
