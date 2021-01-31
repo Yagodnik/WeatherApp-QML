@@ -103,3 +103,47 @@ QString DataStorage::getData(int dataType)
 
     return result;
 }
+
+void DataStorage::remove(int index)
+{
+    file->seek(0);
+    QString content = file->readAll();
+    file->seek(0);
+    QTextStream stream(file);
+
+    int i = 0, start = 0, end = 0;
+    while (!stream.atEnd()) {
+        QString line = stream.readLine();
+
+        qDebug() << "Start =" << start;
+        if (i == index) {
+            content = content.remove(start, line.length()+1);
+            break;
+        }
+
+        i++;
+        start += line.length();
+    }
+
+    qDebug() << "Content = " << content;
+    file->remove();
+    file = nullptr;
+    file = new QFile(path + "/data.txt");
+    if (!file->open(QIODevice::ReadWrite | QIODevice::Text)) {
+        qDebug() << "Cant load data!";
+        return;
+    }
+    QTextStream stream2(file);
+    stream2 << content;
+}
+
+QList<QObject *> DataStorage::getCities()
+{
+    QStringList cities = getData(CITY_NAME).split(" ");
+    cities.removeLast();
+    QList<QObject*> cts;
+
+    foreach(QString city, cities)
+        cts.append(new CityObject(this, city));
+    return cts;
+}
